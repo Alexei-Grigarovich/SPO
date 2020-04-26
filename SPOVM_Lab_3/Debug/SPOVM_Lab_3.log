@@ -1,0 +1,5 @@
+﻿  SPOVM_Lab_3.cpp
+D:\Учеба\СПОВМ\Лабы\SPOVM_Lab_3\SPOVM_Lab_3.cpp(20,35): warning C4326:  возвращаемый тип "main" должен быть "int", а не "void"
+D:\Учеба\СПОВМ\Лабы\SPOVM_Lab_3\SPOVM_Lab_3.cpp(36,31): warning C4229:  устаревший элемент: пропуск модификаторов для данных
+D:\Учеба\СПОВМ\Лабы\SPOVM_Lab_3\SPOVM_Lab_3.cpp(68,31): warning C4229:  устаревший элемент: пропуск модификаторов для данных
+  SPOVM_Lab_3.vcxproj -> D:\Учеба\СПОВМ\Лабы\SPOVM_Lab_3\Debug\SPOVM_Lab_3.exe
