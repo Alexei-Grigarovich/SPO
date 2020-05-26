@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/jlexyc/CLionProjects/FTP-Client/main.cpp
+sys/types.h
+-
+sys/socket.h
+-
+stdio.h
+-
+arpa/inet.h
+-
+unistd.h
+-
+string.h
+-
+fstream
+-
+iostream
+-
+algorithm
+-
+vector
+-
+

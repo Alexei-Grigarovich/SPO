@@ -1,0 +1,3 @@
+/home/jlexyc/CLionProjects/FTP-Client/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/jlexyc/CLionProjects/FTP-Client/cmake-build-debug/CMakeFiles/FTP_Client.dir
+/home/jlexyc/CLionProjects/FTP-Client/cmake-build-debug/CMakeFiles/edit_cache.dir
