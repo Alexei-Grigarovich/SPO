@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(FTP_Client)
 
-add_executable(FTP_Client main.cpp)
+add_executable(FTP_Client main.cpp Commands.cpp Commands.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp Commands.cpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK3 REQUIRED gtk+-3.0)

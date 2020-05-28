@@ -124,6 +124,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jlexyc/CLionProjects/FTP-Client/Commands.cpp">
+			<Option target="FTP_Client"/>
+		</Unit>
+		<Unit filename="/home/jlexyc/CLionProjects/FTP-Client/Commands.h">
+			<Option target="FTP_Client"/>
+		</Unit>
 		<Unit filename="/home/jlexyc/CLionProjects/FTP-Client/main.cpp">
 			<Option target="FTP_Client"/>
 		</Unit>

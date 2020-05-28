@@ -123,6 +123,33 @@ FTP_Client/fast:
 	$(MAKE) -f CMakeFiles/FTP_Client.dir/build.make CMakeFiles/FTP_Client.dir/build
 .PHONY : FTP_Client/fast
 
+Commands.o: Commands.cpp.o
+
+.PHONY : Commands.o
+
+# target to build an object file
+Commands.cpp.o:
+	$(MAKE) -f CMakeFiles/FTP_Client.dir/build.make CMakeFiles/FTP_Client.dir/Commands.cpp.o
+.PHONY : Commands.cpp.o
+
+Commands.i: Commands.cpp.i
+
+.PHONY : Commands.i
+
+# target to preprocess a source file
+Commands.cpp.i:
+	$(MAKE) -f CMakeFiles/FTP_Client.dir/build.make CMakeFiles/FTP_Client.dir/Commands.cpp.i
+.PHONY : Commands.cpp.i
+
+Commands.s: Commands.cpp.s
+
+.PHONY : Commands.s
+
+# target to generate assembly for a file
+Commands.cpp.s:
+	$(MAKE) -f CMakeFiles/FTP_Client.dir/build.make CMakeFiles/FTP_Client.dir/Commands.cpp.s
+.PHONY : Commands.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... FTP_Client"
 	@echo "... edit_cache"
+	@echo "... Commands.o"
+	@echo "... Commands.i"
+	@echo "... Commands.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

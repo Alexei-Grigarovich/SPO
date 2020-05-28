@@ -1,3 +1,2 @@
-g++ -c main.cpp
-g++ -lpthread -o kk main.o
+g++ main.cpp Commands.cpp -o kk -lpthread
 ./kk

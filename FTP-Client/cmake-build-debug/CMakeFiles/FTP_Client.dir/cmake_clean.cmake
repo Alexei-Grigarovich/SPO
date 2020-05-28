@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/FTP_Client.dir/Commands.cpp.o"
   "CMakeFiles/FTP_Client.dir/main.cpp.o"
   "FTP_Client"
   "FTP_Client.pdb"

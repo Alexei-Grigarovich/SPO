@@ -6,7 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/jlexyc/CLionProjects/FTP-Client/main.cpp
+/home/jlexyc/CLionProjects/FTP-Client/Commands.cpp
+Commands.h
+/home/jlexyc/CLionProjects/FTP-Client/Commands.h
+
+/home/jlexyc/CLionProjects/FTP-Client/Commands.h
 sys/types.h
 -
 sys/socket.h
@@ -27,4 +31,8 @@ algorithm
 -
 vector
 -
+
+/home/jlexyc/CLionProjects/FTP-Client/main.cpp
+Commands.h
+/home/jlexyc/CLionProjects/FTP-Client/Commands.h
 
