@@ -18,8 +18,8 @@ public:
     static void sendCommand(int sock, char buff[BUFF_SIZE]);
     static int pasv(int sock, char buff[BUFF_SIZE]);
     static void list(int sock, int dataSock, char buff[BUFF_SIZE]);
-    static void retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData);
-    static void stor(int sock, int dataSock, char buff[BUFF_SIZE], char typeData);
+    static void retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData, string downloadsPath);
+    static void stor(int sock, int dataSock, char buff[BUFF_SIZE], char typeData, string dir);
     static char type(int sock, char buff[BUFF_SIZE]);
     static int quit(int sock, char buff[BUFF_SIZE], pthread_t pthread, int dataSock);
 };

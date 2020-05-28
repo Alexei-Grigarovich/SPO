@@ -65,6 +65,8 @@ void Commands::list(int sock, int dataSock, char buff[BUFF_SIZE]) {
     recv(sock, buff, BUFF_SIZE, 0);
     cout << buff;
 
+    usleep(100);
+
     int readed;
     while((readed = recv(dataSock, dataBuff, BUFF_SIZE, 0)) > 0) {
         cout << dataBuff;
@@ -77,8 +79,8 @@ void Commands::list(int sock, int dataSock, char buff[BUFF_SIZE]) {
     cout << buff;
 }
 
-void Commands::retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData) {
-    string downloadsPath = "downloads/";
+void Commands::retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData, string path) {
+    int readed;
     char dataBuff[BUFF_SIZE];
     ofstream oFile;
     string fileName;
@@ -88,13 +90,12 @@ void Commands::retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData)
         return;
     }
 
-    //Запомним название файла
-    int tmp = strlen("RETR") + 1;
-    for(int i = 0; tmp < strlen(buff) + 1; i++)
-        fileName[i] = buff[tmp++];
-
-
     send(sock, buff, BUFF_SIZE, 0);
+
+    //Запомним название файла
+    buff[strlen(buff) - 2] = '\0';
+    fileName = buff;
+    fileName = fileName.substr(5);
 
     //Ответ сервера
     memset(buff, 0, BUFF_SIZE);
@@ -103,29 +104,27 @@ void Commands::retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData)
 
 
     if (strstr(buff, "125") != nullptr) {
-        //Ввод директории файла для загрузки
-        cout << "Введите директорию для сохранения файла - ";
-        cin >> downloadsPath;
-
         //Создадим файл
-        if (typeData == 'I') oFile.open(downloadsPath + fileName, ios::binary);
-        else oFile.open(downloadsPath + fileName);
-        if(!oFile.is_open()) {
+        if (typeData == 'I') oFile.open(path + fileName, ios::binary);
+            else oFile.open(path + fileName);
+
+        if(!oFile) {
             cout << "Ошибка открытия каталога/файла" << endl;
             return;
+        } else {
+            cout << "\"" << path + fileName << "\" создан" << endl;
         }
 
-        cout << "Скачивание..." << endl;
+        cout << "Скачивание файла \"" << path + fileName << "\"..." << endl;
 
         //Запись
-        int readed;
         while ((readed = recv(dataSock, dataBuff, BUFF_SIZE, 0)) > 0) {
-            oFile << buff;
-            if (readed < BUFF_SIZE) break;
+            oFile.write(dataBuff, readed);
         }
-        oFile.close();
 
         cout << "Скачивание завершено" << endl;
+
+        oFile.close();
 
         //Ответ сервера
         memset(buff, 0, BUFF_SIZE);
@@ -134,21 +133,22 @@ void Commands::retr(int sock, int dataSock, char buff[BUFF_SIZE], char typeData)
     }
 }
 
-void Commands::stor(int sock, int dataSock, char buff[BUFF_SIZE], char typeData) {
+void Commands::stor(int sock, int dataSock, char buff[BUFF_SIZE], char typeData, string path) {
+    char dataBuff[BUFF_SIZE];
     string fileName;
     ifstream iFile;
-    string dir;
 
     if (strlen(buff) < 5) {
         cout << " Недостаточно аргументов" << endl;
         return;
     }
 
+    send(sock, buff, BUFF_SIZE, 0);
+
     //Запомним имя файла
+    buff[strlen(buff) - 2] = '\0';
     fileName = buff;
     fileName = fileName.substr(5);
-
-    send(sock, buff, BUFF_SIZE, 0);
 
     //Ответ сервера
     memset(buff, 0, BUFF_SIZE);
@@ -158,28 +158,27 @@ void Commands::stor(int sock, int dataSock, char buff[BUFF_SIZE], char typeData)
 
     //Передача файла
     if (strstr(buff, "125") != nullptr) {
-        //Ввод директории файла для загрузки
-        cout << "Введите директорию файла - ";
-        cin >> dir;
-
         //Откроем файл
-        if (typeData == 'I') iFile.open(dir + fileName, ios::binary);
-        else iFile.open(dir + fileName);
+        if (typeData == 'I') iFile.open(path + fileName, ios::binary);
+            else iFile.open(path + fileName);
 
-        if (!iFile.is_open()) {
-            cout << "Файл не найден" << endl;
+        if (!iFile) {
+            cout << "Файл \"" << path + fileName << "\" не найден" << endl;
             return;
+        } else {
+            cout << "\"" << path + fileName << "\" создан" << endl;
         }
+
+        cout << "Передача файла \"" << path + fileName << "\"..." << endl;
 
         //Теперь будем считывать строку в буффер, затем отправлять серверу
         while (!iFile.eof()) {
-            memset(buff, 0, BUFF_SIZE);
-            iFile.read(buff, BUFF_SIZE);
-            send(dataSock, buff, BUFF_SIZE, 0);
+            iFile.read(dataBuff, BUFF_SIZE);
+            send(dataSock, dataBuff, BUFF_SIZE, 0);
         }
 
-        //Закроем файл
         cout << "Передача завершена" << endl;
+
         iFile.close();
 
         //Ответ сервера

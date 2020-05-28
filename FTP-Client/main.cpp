@@ -2,6 +2,7 @@
 
 bool isWorking = false;
 char typeData = 'A';
+string path = "";
 
 struct data {
     int filedes[2]; //0 - чтение, 1 - запись
@@ -17,23 +18,28 @@ void* threadFun(void* arg) {
         read(pipeRead, &buff, BUFF_SIZE);
         isWorking = true;
 
+        cout << "Выполнение задачи в фоновом потоке..." << endl;
+
         //LIST - список файлов
         if (strstr(buff, "LIST") != nullptr && dataSock != 0) Commands::list(sock, dataSock, buff);
 
         //RETR - скачать файл с сервера
-        if (strstr(buff, "RETR") != nullptr && dataSock != 0) Commands::retr(sock, dataSock, buff, typeData);
+        if (strstr(buff, "RETR") != nullptr && dataSock != 0) Commands::retr(sock, dataSock, buff, typeData, path);
 
         //STOR - загрузить файл на сервер
-        if (strstr(buff, "STOR") != nullptr && dataSock != 0) Commands::stor(sock, dataSock, buff, typeData);
+        if (strstr(buff, "STOR") != nullptr && dataSock != 0) Commands::stor(sock, dataSock, buff, typeData, path);
 
+        cout << "Завершение выполнения задачи в фоновом потоке..." << endl;
+
+        memset(buff, 0, BUFF_SIZE);
         isWorking = false;
     }
 }
 
 int main() {
     //Переменные
-    char address[BUFF_SIZE], buff[BUFF_SIZE];
-    int sock = 0, dataSock = 0, authFlag = 1, port = 0, filedes[2];
+    char address[BUFF_SIZE] = "13.56.207.108", buff[BUFF_SIZE];
+    int sock = 0, dataSock = 0, authFlag = 1, port = 2000, filedes[2];
     sockaddr_in serverSock;
     pthread_t pthread;
 
@@ -52,14 +58,14 @@ int main() {
     }
 
 
-    //Ввод адреса
-    cout << "Введите адресс для подключения - ";
-    cin >> address;
-
-    //Ввод порта
-    cout << "Введите порт для подключения - ";
-    cin >> port;
-    cin.ignore();
+//    //Ввод адреса
+//    cout << "Введите адресс для подключения - ";
+//    cin >> address;
+//
+//    //Ввод порта
+//    cout << "Введите порт для подключения - ";
+//    cin >> port;
+//    cin.ignore();
 
 
     //Соединение
@@ -93,14 +99,21 @@ int main() {
         //PASS
         if (strstr(buff, "PASS") != nullptr) Commands::sendCommand(sock, buff);
 
-        //PASV - пассивный режим
-        if (strstr(buff, "PASV") != nullptr && dataSock == 0) {
+        //PASV - пассивный режим  && dataSock == 0
+        if (strstr(buff, "PASV") != nullptr) {
             dataSock = Commands::pasv(sock, buff);
+
+            struct timeval timeout;
+            timeout.tv_sec = 1;
+            timeout.tv_usec = 0;
+            setsockopt(dataSock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
             //Создание потока
             data* args = new data;
             args->dataSock = dataSock;
             args->sock = sock;
+            args->filedes[0] = filedes[0];
+            args->filedes[1] = filedes[1];
 
             if (pthread_create(&pthread, nullptr, threadFun, args) != 0) {
                 cout << "Ошибка создания потока" << endl;
@@ -111,10 +124,20 @@ int main() {
         if (strstr(buff, "LIST") != nullptr && dataSock != 0 && !isWorking) write(filedes[1], &buff, strlen(buff));
 
         //RETR - скачать файл с сервера
-        if (strstr(buff, "RETR") != nullptr && dataSock != 0 && !isWorking) write(filedes[1], &buff, strlen(buff));
+        if (strstr(buff, "RETR") != nullptr && dataSock != 0 && !isWorking) {
+            //Ввод директории файла для скачивания
+            cout << "Куда сохранить файл? - ";
+            cin >> path;
+            write(filedes[1], &buff, strlen(buff));
+        }
 
         //STOR - загрузить файл на сервер
-        if (strstr(buff, "STOR") != nullptr && dataSock != 0 && !isWorking) write(filedes[1], &buff, strlen(buff));
+        if (strstr(buff, "STOR") != nullptr && dataSock != 0 && !isWorking) {
+            //Ввод директории файла для загрузки
+            cout << "Введите директорию файла - ";
+            cin >> path;
+            write(filedes[1], &buff, strlen(buff));
+        }
 
         //ABOR - прервать передачу файла
         if (strstr(buff, "ABOR") != nullptr) Commands::sendCommand(sock, buff);
